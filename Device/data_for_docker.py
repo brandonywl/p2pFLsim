@@ -58,7 +58,7 @@ def batch_data(data_shard, bs=32):
 def create_and_save_clients(num_clients=10):
     X_train, y_train, X_test, y_test = load_dataset()
     X_train, X_test = prep_pixels(X_train, X_test)
-    clients = create_clients(X_train, y_train, num_clients=10, initial='client')
+    clients = create_clients(X_train, y_train, num_clients=num_clients, initial='client')
 
     basepath = os.path.join(os.getcwd(), "all_data")
     os.makedirs(basepath, 0o777)
@@ -90,7 +90,7 @@ def load_clients(num_clients):
 
 if __name__ == '__main__':
     # Create clients and save each dataset
-    # create_and_save_clients()
+    # create_and_save_clients(5)
 
 
     # Load back and check client datasets
