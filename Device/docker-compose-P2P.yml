@@ -1,7 +1,7 @@
 version: '2'
 services:
     node1:
-        build: ./node/
+        build: ./peer/
         environment:
             - PYTHONUNBUFFERED=1 #to flush Python stdout else logs not displayed
             - ORIGIN=node1
@@ -16,7 +16,7 @@ services:
                           count: 1
                           capabilities: [gpu]
     node2:
-        build: ./node/
+        build: ./peer/
         environment:
             - PYTHONUNBUFFERED=1
             - ORIGIN=node2
@@ -31,7 +31,7 @@ services:
                           count: 1
                           capabilities: [gpu]
     node3:
-        build: ./node/
+        build: ./peer/
         environment:
             - PYTHONUNBUFFERED=1
             - ORIGIN=node3
@@ -46,7 +46,7 @@ services:
                           count: 1
                           capabilities: [gpu]
     node4:
-        build: ./node/
+        build: ./peer/
         environment:
             - PYTHONUNBUFFERED=1
             - ORIGIN=node4
@@ -61,7 +61,7 @@ services:
                           count: 1
                           capabilities: [gpu]
 #    node5:
-#        build: ./node/
+#        build: ./peer/
 #        environment:
 #            - ORIGIN=node5
 #            - NUM_CLIENTS=4
