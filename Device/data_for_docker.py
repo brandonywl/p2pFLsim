@@ -25,7 +25,7 @@ def prep_pixels(train, test):
     return train_norm, test_norm
 
 
-def create_clients(image_list, label_list, num_clients=10, initial='clients'):
+def create_clients(image_list, label_list, num_clients=10, initial='clients', data_shard_dist=None):
     # create a list of client names
     client_names = ['{}_{}'.format(initial, i + 1) for i in range(num_clients)]
 
@@ -34,8 +34,31 @@ def create_clients(image_list, label_list, num_clients=10, initial='clients'):
     random.shuffle(data)
 
     # shard data and place at each client
-    size = len(data) // num_clients
-    shards = [data[i:i + size] for i in range(0, size * num_clients, size)]
+    # If a pre-existing distrbution exists, then use it to shard the data. Else just equally shard them
+    if data_shard_dist is None:
+        size = len(data) // num_clients
+        shards = [data[i:i + size] for i in range(0, size * num_clients, size)]
+
+    else:
+        assert sum(data_shard_dist) == 1
+
+        dataset_size = len(data)
+
+        shard_sizes = [round(dataset_size*i) for i in data_shard_dist]
+
+        if 0 in shard_sizes:
+            raise Exception("Potentially one shard will have no data")
+
+        shards_idx = [0]
+        for i,e in enumerate(shard_sizes):
+            if i == 0:
+                shards_idx.append(e)
+            
+            else:
+                shards_idx.append(e + shards_idx[-1])
+
+        shards = [(e, shards_idx[i+1]) for i, e in enumerate(shards_idx[:-1])]
+
 
     # number of clients must equal number of shards
     assert (len(shards) == len(client_names))
