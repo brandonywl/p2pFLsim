@@ -84,6 +84,24 @@ class Node:
         self.ns_helper.simulation_start()
         return received
 
+
+    def send_train_data(self, to_node):
+        try:
+            self.ns_helper.send_data(self.out_connection[to_node], None, 0.0)
+            self.ns_helper.simulation_start()
+        except Exception as e:
+            print("{%sERROR establishing socket : To-node not in peers}" % self.log_prefix)
+
+    def get_train_data(self):
+        received = self.ns_helper.recv_data(self.in_connection)
+        self.ns_helper.simulation_start()  # Force order of execution
+
+        received = self.ns_helper.read_recvd_data(0.5)
+        self.ns_helper.simulation_start()
+        return received
+
+
+
     def training_step(self, step):
         # local model training
         # build_flag = True if step == 1 else False
